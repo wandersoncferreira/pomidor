@@ -469,6 +469,8 @@ TIME may be nil."
     (define-key map (kbd "R") #'pomidor-reset)
     (define-key map (kbd "RET") #'pomidor-stop)
     (define-key map (kbd "SPC") #'pomidor-break)
+    (define-key map (kbd "h") #'pomidor-hold)
+    (define-key map (kbd "H") #'pomidor-unhold)
     (suppress-keymap map)
     map))
 
@@ -518,6 +520,17 @@ TIME may be nil."
   (let ((state (pomidor--current-state)))
     (plist-put state :stopped (current-time)))
   (nconc pomidor-global-state (list (pomidor--make-state))))
+
+(defun pomidor-hold ()
+  "Stop the current working pomidor and puts the system on hold."
+  (interactive)
+  (pomidor-stop)
+  (pomidor--cancel-timer))
+
+(defun pomidor-unhold ()
+  "Unhold and start a new pomidor."
+  (interactive)
+  (setq pomidor-timer (run-at-time nil 1 #'pomidor--update)))
 
 (defun pomidor-save-session ()
   "Save the current session in a file."
