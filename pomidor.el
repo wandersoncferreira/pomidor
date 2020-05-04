@@ -182,7 +182,7 @@ To disable sounds, set to nil."
 (defvar pomidor-header-separator " — "
   "Pomidor string to separate time and duration in header.")
 
-(defvar pomidor--system-on-hold? nil
+(defvar pomidor--system-on-hold-p nil
   "Pomidor control of hold in system.")
 
 ;;; Private
@@ -496,15 +496,15 @@ TIME may be nil."
   (interactive)
   (let ((state (pomidor--current-state)))
     (plist-put state :stopped (current-time)))
-  (setq pomidor--system-on-hold? t)
+  (setq pomidor--system-on-hold-p t)
   (pomidor--cancel-timer))
 
 (defun pomidor-unhold ()
   "Unhold and start a new pomidor."
   (interactive)
-  (when pomidor--system-on-hold?
+  (when pomidor--system-on-hold-p
     (nconc pomidor-global-state (list (pomidor--make-state)))
-    (setq pomidor--system-on-hold? nil)
+    (setq pomidor--system-on-hold-p nil)
     (setq pomidor-timer (run-at-time nil 1 #'pomidor--update))))
 
 (define-derived-mode pomidor-mode special-mode "pomidor"
